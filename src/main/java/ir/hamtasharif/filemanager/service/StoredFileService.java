@@ -17,15 +17,16 @@ public class StoredFileService {
 
     private final StoredFileRepository fileRepository;
     private final DirectoryRepository directoryRepository;
+    private final ActivityLogService activityLogService;
 
     //    private final String uploadRoot = "uploads/";
     private final String uploadRoot = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
 
 
-    public StoredFileService(StoredFileRepository fileRepository, DirectoryRepository directoryRepository) {
+    public StoredFileService(StoredFileRepository fileRepository, DirectoryRepository directoryRepository, ActivityLogService activityLogService) {
         this.fileRepository = fileRepository;
         this.directoryRepository = directoryRepository;
-
+        this.activityLogService = activityLogService;
     }
 
     public StoredFile saveFile(Long directoryId, MultipartFile multipartFile) throws IOException {
@@ -47,7 +48,15 @@ public class StoredFileService {
                 .directory(directory)
                 .build();
 
-        return fileRepository.save(storedFile);
+        StoredFile savedFile = fileRepository.save(storedFile);
+
+        activityLogService.log(
+                directory.getOwner().getUsername(),
+                "UPLOAD",
+                "Uploaded file: " + multipartFile.getOriginalFilename()
+        );
+
+        return savedFile;
     }
 
     public List<StoredFile> listFiles(Long directoryId) {
@@ -66,6 +75,12 @@ public class StoredFileService {
         if (file.exists()) file.delete();
 
         fileRepository.deleteById(fileId);
+
+        activityLogService.log(
+                storedFile.getDirectory().getOwner().getUsername(),
+                "DELETE",
+                "Deleted file: " + storedFile.getName()
+        );
     }
 }
 
