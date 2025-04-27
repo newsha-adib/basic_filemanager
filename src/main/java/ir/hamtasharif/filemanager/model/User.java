@@ -3,6 +3,10 @@ package ir.hamtasharif.filemanager.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -19,4 +23,8 @@ public class User {
     private String username;
 
     private String password;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Directory> directories;
 }

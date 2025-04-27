@@ -3,6 +3,8 @@ package ir.hamtasharif.filemanager.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Getter
 @Setter
@@ -24,5 +26,6 @@ public class StoredFile {
     private Long size;
 
     @ManyToOne
+    @JsonIgnore
     private Directory directory;
 }
