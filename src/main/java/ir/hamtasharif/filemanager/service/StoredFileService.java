@@ -63,8 +63,18 @@ public class StoredFileService {
         return fileRepository.findByDirectoryId(directoryId);
     }
 
-    public Optional<StoredFile> getFile(Long fileId) {
-        return fileRepository.findById(fileId);
+    public Optional<StoredFile> getFile(Long fileId, String username) {
+        Optional<StoredFile> fileOpt = fileRepository.findById(fileId);
+
+        fileOpt.ifPresent(file -> {
+            activityLogService.log(
+                    username,
+                    "DOWNLOAD",
+                    "Downloaded file: " + file.getName()
+            );
+        });
+
+        return fileOpt;
     }
 
     public void deleteFile(Long fileId) {

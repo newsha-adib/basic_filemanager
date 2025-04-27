@@ -34,9 +34,9 @@ public class StoredFileController {
         return ResponseEntity.ok(storedFileService.listFiles(directoryId));
     }
 
-    @GetMapping("/download/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
-        return storedFileService.getFile(fileId)
+    @GetMapping("/download/{username}/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String username, @PathVariable Long fileId) {
+        return storedFileService.getFile(fileId, username)
                 .map(storedFile -> {
                     Resource resource = new FileSystemResource(storedFile.getPath());
                     HttpHeaders headers = new HttpHeaders();

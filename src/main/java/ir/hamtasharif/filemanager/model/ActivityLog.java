@@ -19,9 +19,9 @@ public class ActivityLog {
 
     private String username;
 
-    private String action; // مثل "UPLOAD", "DELETE", "CREATE_DIRECTORY" و غیره
+    private String action;
 
-    private String details; // توضیحات اضافی
+    private String details;
 
     private LocalDateTime timestamp;
 }
